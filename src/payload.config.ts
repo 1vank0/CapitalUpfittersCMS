@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import { payloadCloudPlugin } from '@payloadcms/plugin-cloud'
+
 
 import { Services } from './payload/collections/Services'
 import { Pages } from './payload/collections/Pages'
@@ -84,6 +84,5 @@ export default buildConfig({
     },
   },
   plugins: [
-    // payloadCloudPlugin() — enable when deploying to Payload Cloud
   ],
 })
