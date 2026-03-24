@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Production
+build/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Database (dev only — add to .gitignore for security)
+*.db
+*.db-shm
+*.db-wal
+
+# Media uploads (use R2/S3 in production)
+public/media/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+.npm
+
+# Generated Payload types (can regenerate with npm run generate:types)
+src/payload-types.ts
+src/generated-schema.graphql
