@@ -4,7 +4,6 @@ import { buildConfig } from 'payload'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
-
 import { Services } from './payload/collections/Services'
 import { Pages } from './payload/collections/Pages'
 import { GeoPages } from './payload/collections/GeoPages'
@@ -12,6 +11,8 @@ import { Media } from './payload/collections/Media'
 import { Testimonials } from './payload/collections/Testimonials'
 import { FAQs } from './payload/collections/FAQs'
 import { Tags } from './payload/collections/Tags'
+import { Leads } from './payload/collections/Leads'
+import { Quotes } from './payload/collections/Quotes'
 import { Settings } from './payload/globals/Settings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -33,6 +34,7 @@ export default buildConfig({
         : false,
   },
   collections: [
+    // ─── Content ───────────────────────────────────────────
     Services,
     Pages,
     GeoPages,
@@ -40,6 +42,10 @@ export default buildConfig({
     Testimonials,
     FAQs,
     Tags,
+    // ─── Operations ────────────────────────────────────────
+    Leads,
+    Quotes,
+    // ─── System ────────────────────────────────────────────
     {
       slug: 'users',
       auth: true,
@@ -48,10 +54,7 @@ export default buildConfig({
         group: 'Configuration',
       },
       fields: [
-        {
-          name: 'name',
-          type: 'text',
-        },
+        { name: 'name', type: 'text' },
         {
           name: 'role',
           type: 'select',
@@ -72,6 +75,18 @@ export default buildConfig({
     },
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',
+  cors: [
+    'https://capitalupfitters.com',
+    'https://www.capitalupfitters.com',
+    'http://localhost:3000',
+    process.env.NEXT_PUBLIC_SERVER_URL || '',
+  ].filter(Boolean),
+  csrf: [
+    'https://capitalupfitters.com',
+    'https://www.capitalupfitters.com',
+    'http://localhost:3000',
+    process.env.NEXT_PUBLIC_SERVER_URL || '',
+  ].filter(Boolean),
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
@@ -80,9 +95,8 @@ export default buildConfig({
   },
   upload: {
     limits: {
-      fileSize: 10000000, // 10MB
+      fileSize: 10000000,
     },
   },
-  plugins: [
-  ],
+  plugins: [],
 })
