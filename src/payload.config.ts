@@ -72,9 +72,10 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL,
-      // Required for Supabase + Vercel serverless
-      max: 1,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      max: 3,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+      ssl: { rejectUnauthorized: false },
     },
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',

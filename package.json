@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "predev": "payload generate:importmap",
     "start": "next start",
     "lint": "next lint",
     "generate:types": "payload generate:types",

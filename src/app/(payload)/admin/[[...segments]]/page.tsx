@@ -4,6 +4,7 @@ import config from '@payload-config'
 import { importMap } from '../../importMap'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 30
 
 type Args = {
   params: Promise<{ segments: string[] }>
