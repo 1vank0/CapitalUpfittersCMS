@@ -72,11 +72,15 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL,
-      max: 3,
+      max: 2,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 10000,
+      connectionTimeoutMillis: 15000,
       ssl: { rejectUnauthorized: false },
+      // Required for Supabase pgbouncer session pooling
+      application_name: 'capital-upfitters-cms',
     },
+    // Disable prepared statements — required for Supabase pgbouncer
+    pool_mode: 'session',
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',
   cors: [
