@@ -1,7 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
 import { Services } from './payload/collections/Services'
@@ -69,9 +69,9 @@ export default buildConfig({
   ],
   globals: [Settings],
   editor: lexicalEditor(),
-  db: sqliteAdapter({
-    client: {
-      url: process.env.DATABASE_URL || `file:${path.resolve(dirname, '../database.db')}`,
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URL,
     },
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',

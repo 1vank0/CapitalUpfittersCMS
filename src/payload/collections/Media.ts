@@ -1,5 +1,4 @@
 import type { CollectionConfig } from 'payload'
-import path from 'path'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -9,7 +8,8 @@ export const Media: CollectionConfig = {
     defaultColumns: ['filename', 'alt', 'category', 'updatedAt'],
   },
   upload: {
-    staticDir: path.resolve('/home/user/workspace/capital-upfitters-cms/public/media'),
+    // staticDir removed — storage handled by R2 adapter in payload.config.ts
+    // sharp handles all image resizing
     imageSizes: [
       { name: 'thumbnail', width: 400, height: 300, position: 'centre' },
       { name: 'card', width: 800, height: 600, position: 'centre' },

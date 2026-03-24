@@ -18,8 +18,8 @@ const nextConfig = {
       },
     ],
   },
-  // Required for Payload CMS SQLite in serverless
-  serverExternalPackages: ['better-sqlite3'],
+  // Required for Payload CMS Postgres in serverless
+  serverExternalPackages: ['pg', 'pg-native'],
 }
 
 export default withPayload(nextConfig)
