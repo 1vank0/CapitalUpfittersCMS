@@ -3,4 +3,6 @@ import config from '@payload-config'
 
 export const dynamic = 'force-dynamic'
 
-export default () => NotFoundPage({ config })
+export default async function NotFound() {
+  return NotFoundPage({ config })
+}

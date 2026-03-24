@@ -2,9 +2,6 @@ import { withPayload } from '@payloadcms/next/withPayload'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    reactCompiler: false,
-  },
   images: {
     remotePatterns: [
       {
@@ -13,6 +10,8 @@ const nextConfig = {
       },
     ],
   },
+  // Required for Payload CMS SQLite in serverless
+  serverExternalPackages: ['better-sqlite3'],
 }
 
 export default withPayload(nextConfig)

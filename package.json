@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next-payload build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "generate:types": "payload generate:types",
@@ -17,7 +17,7 @@
     "@payloadcms/richtext-lexical": "^3.80.0",
     "better-sqlite3": "^12.8.0",
     "graphql": "^16.13.1",
-    "next": "14.2.35",
+    "next": "^15.4.11",
     "payload": "^3.80.0",
     "react": "^18",
     "react-dom": "^18"

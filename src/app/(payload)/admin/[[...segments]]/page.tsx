@@ -4,10 +4,20 @@ import config from '@payload-config'
 
 export const dynamic = 'force-dynamic'
 
-export const generateMetadata = ({ params }: { params: { segments: string[] } }): Promise<Metadata> =>
-  generatePageMetadata({ config, params: { segments: params.segments ?? [] } })
+type Args = {
+  params: Promise<{
+    segments: string[]
+  }>
+}
 
-const Page = ({ params }: { params: { segments: string[] } }) =>
-  RootPage({ config, params: { segments: params.segments ?? [] } })
+export const generateMetadata = async ({ params: paramsPromise }: Args): Promise<Metadata> => {
+  const { segments } = await paramsPromise
+  return generatePageMetadata({ config, params: { segments: segments ?? [] } })
+}
+
+const Page = async ({ params: paramsPromise }: Args) => {
+  const { segments } = await paramsPromise
+  return RootPage({ config, params: { segments: segments ?? [] } })
+}
 
 export default Page
