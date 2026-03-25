@@ -363,6 +363,132 @@ input[type="checkbox"]:checked {
   margin-bottom: 1.5rem !important;
 }
 
+/* ── AUTOFILL FIX (removes yellow browser autofill background) ── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #111827 !important;
+  background-color: #ffffff !important;
+  caret-color: #111827 !important;
+  transition: background-color 9999s ease-in-out 0s !important;
+}
+
+/* ── CREATE FIRST USER / LOGIN FORM CARD ─────────────────────── */
+.template-minimal,
+[class*="template-minimal"] {
+  background: linear-gradient(135deg, #0d1117 0%, #111827 50%, #1a2332 100%) !important;
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.template-minimal__wrap,
+[class*="template-minimal__wrap"] {
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.4) !important;
+  width: 100% !important;
+  max-width: 460px !important;
+  padding: 2.5rem !important;
+  margin: 0 auto !important;
+}
+
+/* Welcome heading */
+.template-minimal__wrap h1,
+[class*="template-minimal"] h1 {
+  font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+  color: #111827 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+/* Subtitle text */
+.template-minimal__wrap p,
+[class*="template-minimal"] p {
+  color: #6b7280 !important;
+  font-size: 0.875rem !important;
+  font-family: 'Inter', sans-serif !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Add CU logo above form */
+.template-minimal__wrap::before {
+  content: '' !important;
+  display: block !important;
+  width: 48px !important;
+  height: 4px !important;
+  background: #203055 !important;
+  border-radius: 2px !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Brand mark */
+.template-minimal__wrap::after {
+  content: 'CAPITAL UPFITTERS CMS' !important;
+  display: block !important;
+  font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.15em !important;
+  color: #9ca3af !important;
+  text-align: center !important;
+  margin-top: 2rem !important;
+  padding-top: 1.5rem !important;
+  border-top: 1px solid #e5e7eb !important;
+}
+
+/* Login/create form inputs full width */
+.template-minimal input,
+.template-minimal select,
+[class*="template-minimal"] input,
+[class*="template-minimal"] select {
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1.5px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.9rem !important;
+  color: #111827 !important;
+  background: #ffffff !important;
+  margin-bottom: 0.25rem !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+
+.template-minimal input:focus,
+[class*="template-minimal"] input:focus {
+  border-color: #203055 !important;
+  box-shadow: 0 0 0 3px rgba(32, 48, 85, 0.12) !important;
+  outline: none !important;
+}
+
+/* Create/Login button full width */
+.template-minimal .btn,
+.template-minimal button[type="submit"],
+[class*="template-minimal"] .btn--style-primary {
+  width: 100% !important;
+  padding: 0.875rem !important;
+  font-size: 0.9375rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  border-radius: 8px !important;
+  background: #203055 !important;
+  border-color: #203055 !important;
+  margin-top: 0.75rem !important;
+}
+
+.template-minimal .btn:hover,
+[class*="template-minimal"] .btn--style-primary:hover {
+  background: #162240 !important;
+}
+
 /* ── SCROLLBARS ────────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
