@@ -4,70 +4,37 @@ import pg from 'pg'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
-  const connectionString =
-    process.env.DATABASE_URL ||
-    process.env.POSTGRES_URL_NON_POOLING ||
-    process.env.POSTGRES_PRISMA_URL ||
-    process.env.POSTGRES_URL
+  // Show all available connection env vars (passwords masked)
+  const mask = (s?: string) => s ? s.replace(/:([^@:]{3})[^@]*@/, ':***@').substring(0, 90) : 'NOT SET'
 
   const info: Record<string, unknown> = {
-    using: connectionString
-      ?.replace(/:([^@]+)@/, ':***@')
-      .substring(0, 80),
+    DATABASE_URL: mask(process.env.DATABASE_URL),
+    POSTGRES_URL: mask(process.env.POSTGRES_URL),
+    POSTGRES_URL_NON_POOLING: mask(process.env.POSTGRES_URL_NON_POOLING),
+    POSTGRES_PRISMA_URL: mask(process.env.POSTGRES_PRISMA_URL),
+    SUPABASE_URL: mask(process.env.SUPABASE_URL),
   }
 
-  const client = new pg.Client({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-  })
+  // Try each available connection string
+  const candidates = [
+    ['DATABASE_URL', process.env.DATABASE_URL],
+    ['POSTGRES_URL_NON_POOLING', process.env.POSTGRES_URL_NON_POOLING],
+    ['POSTGRES_PRISMA_URL', process.env.POSTGRES_PRISMA_URL],
+    ['POSTGRES_URL', process.env.POSTGRES_URL],
+  ]
 
-  try {
-    await client.connect()
-    info.connected = true
-
-    // Check which tables exist
-    const tables = await client.query(`
-      SELECT tablename FROM pg_tables 
-      WHERE schemaname = 'public' 
-      ORDER BY tablename
-    `)
-    info.tables = tables.rows.map((r: { tablename: string }) => r.tablename)
-
-    // Try the exact failing query
+  for (const [name, cs] of candidates) {
+    if (!cs) continue
+    const client = new pg.Client({ connectionString: cs as string, ssl: { rejectUnauthorized: false }, connectionTimeoutMillis: 5000 })
     try {
-      const result = await client.query(`
-        SELECT "users"."id", "users"."email"
-        FROM "users" "users"
-        ORDER BY "users"."created_at" DESC
-        LIMIT 1
-      `)
-      info.users_query = 'ok'
-      info.user_count = result.rowCount
-    } catch (qErr: unknown) {
-      info.users_query_error = qErr instanceof Error ? qErr.message : String(qErr)
+      await client.connect()
+      const tables = await client.query(`SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename`)
+      info[`${name}_tables`] = tables.rows.map((r: {tablename: string}) => r.tablename)
+      await client.end()
+    } catch (err: unknown) {
+      info[`${name}_error`] = err instanceof Error ? err.message : String(err)
+      try { await client.end() } catch {}
     }
-
-    // Try the lateral join specifically
-    try {
-      const result = await client.query(`
-        SELECT "users"."id"
-        FROM "users" "users"
-        LEFT JOIN LATERAL (
-          SELECT 1 as data FROM "users_sessions" "us"
-          WHERE "us"."_parent_id" = "users"."id"
-          LIMIT 1
-        ) "users_sessions" ON true
-        LIMIT 1
-      `)
-      info.lateral_join = 'ok'
-    } catch (lErr: unknown) {
-      info.lateral_join_error = lErr instanceof Error ? lErr.message : String(lErr)
-    }
-
-    await client.end()
-  } catch (err: unknown) {
-    info.connect_error = err instanceof Error ? err.message : String(err)
-    try { await client.end() } catch {}
   }
 
   return NextResponse.json(info)
