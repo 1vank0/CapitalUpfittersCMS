@@ -26,6 +26,9 @@ if (process.env.NODE_ENV === 'production') {
 
 export default buildConfig({
   admin: {
+    importMap: {
+      baseDir: path.resolve(dirname, '..'),
+    },
     meta: {
       titleSuffix: '— Capital Upfitters CMS',
       favicon: '/favicon.ico',
