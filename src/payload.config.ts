@@ -81,7 +81,6 @@ export default buildConfig({
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: {
-      // Supports both DATABASE_URL and Vercel Supabase integration variable names
       connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL,
       max: 2,
       idleTimeoutMillis: 30000,
@@ -89,8 +88,9 @@ export default buildConfig({
       ssl: { rejectUnauthorized: false },
       application_name: 'capital-upfitters-cms',
     },
-    // Disable prepared statements — required for Supabase pgbouncer
-    pool_mode: 'session',
+    // Push schema directly to DB — creates all tables on first run
+    // Safe for production when no existing data; skip after first successful deploy
+    push: process.env.PAYLOAD_DB_PUSH !== 'false',
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',
   cors: [
