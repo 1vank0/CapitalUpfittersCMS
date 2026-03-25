@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node_modules/.bin/tsx node_modules/payload/bin.js generate:importmap && next build",
+    "build": "node scripts/generate-importmap.mjs && next build",
     "predev": "payload generate:importmap",
     "start": "next start",
     "lint": "next lint",
     "generate:types": "payload generate:types",
     "generate:graphQLSchema": "payload generate:graphQLSchema",
-    "payload": "payload"
+    "payload": "payload",
+    "generate:importmap": "node scripts/generate-importmap.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.80.0",

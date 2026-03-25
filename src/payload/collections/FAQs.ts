@@ -15,7 +15,7 @@ export const FAQs: CollectionConfig = {
     },
     {
       name: 'answer',
-      type: 'textarea',
+      type: 'richText',
       required: true,
     },
     {

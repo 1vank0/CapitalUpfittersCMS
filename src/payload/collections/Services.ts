@@ -80,7 +80,7 @@ export const Services: CollectionConfig = {
     },
     {
       name: 'description',
-      type: 'textarea',
+      type: 'richText',
       label: 'Full Description',
     },
     {

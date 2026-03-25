@@ -1,6 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 
 import { Services } from './payload/collections/Services'
@@ -71,6 +72,7 @@ export default buildConfig({
     },
   ],
   globals: [Settings],
+  editor: lexicalEditor(),
   db: vercelPostgresAdapter({
     // Neon serverless — HTTP transport, no connection limits, perfect for Vercel
     // Set POSTGRES_URL in Vercel env vars to your Neon connection string
