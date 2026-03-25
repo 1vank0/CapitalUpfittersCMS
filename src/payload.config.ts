@@ -18,6 +18,12 @@ import { Settings } from './payload/globals/Settings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// Required for Supabase SSL cert chain on Vercel serverless
+// Supabase uses a self-signed cert in its chain that Node.js rejects by default
+if (process.env.NODE_ENV === 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+}
+
 export default buildConfig({
   admin: {
     meta: {
@@ -76,10 +82,7 @@ export default buildConfig({
       max: 2,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 15000,
-      // SSL: accept self-signed certs (required for Supabase pooler)
-      ssl: process.env.POSTGRES_URL
-        ? { rejectUnauthorized: false, checkServerIdentity: () => undefined }
-        : false,
+      ssl: { rejectUnauthorized: false },
       application_name: 'capital-upfitters-cms',
     },
     // Disable prepared statements — required for Supabase pgbouncer
