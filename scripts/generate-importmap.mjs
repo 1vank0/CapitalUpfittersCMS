@@ -37,7 +37,6 @@ const components = [
   ['@payloadcms/richtext-lexical/client', 'LinkFeatureClient'],
   ['@payloadcms/richtext-lexical/client', 'RelationshipFeatureClient'],
   ['@payloadcms/richtext-lexical/client', 'UploadFeatureClient'],
-  ['@payloadcms/richtext-lexical/client', 'BlockQuoteFeatureClient'],
   ['@payloadcms/richtext-lexical/client', 'FixedToolbarFeatureClient'],
   ['@payloadcms/richtext-lexical/client', 'InlineToolbarFeatureClient'],
   ['@payloadcms/richtext-lexical/client', 'HorizontalRuleFeatureClient'],
