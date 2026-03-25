@@ -14,9 +14,9 @@ export async function GET(request: Request) {
 
   // Use the connection string passed as param, or fall back to env vars
   const customCs = searchParams.get('cs')
+  // Never use DATABASE_URL — Vercel cannot resolve direct Supabase DNS
   const connectionString =
     customCs ||
-    process.env.DATABASE_URL ||
     process.env.POSTGRES_URL_NON_POOLING ||
     process.env.POSTGRES_PRISMA_URL ||
     process.env.POSTGRES_URL
