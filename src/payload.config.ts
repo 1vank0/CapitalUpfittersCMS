@@ -75,16 +75,16 @@ export default buildConfig({
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: {
-      // POSTGRES_URL_NON_POOLING = direct connection required for Payload's prepared statements
-      // pgbouncer transaction pooling (POSTGRES_URL port 6543) rejects prepared statements
+      // Neon (neon.tech) — native serverless Postgres, no prepared statement conflicts
+      // Supports Vercel serverless + Payload CMS v3 out of the box
+      // Env var: DATABASE_URL (set in Vercel dashboard from Neon integration)
       connectionString: process.env.DATABASE_URL,
-      max: 2,
+      max: 3,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 15000,
       ssl: { rejectUnauthorized: false },
       application_name: 'capital-upfitters-cms',
     },
-
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',
   cors: [
