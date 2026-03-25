@@ -18,12 +18,6 @@ import { Settings } from './payload/globals/Settings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Required for Supabase SSL cert chain on Vercel serverless
-// Supabase uses a self-signed cert in its chain that Node.js rejects by default
-if (process.env.NODE_ENV === 'production') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-}
-
 export default buildConfig({
   admin: {
     importMap: {
