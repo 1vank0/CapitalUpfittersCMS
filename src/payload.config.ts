@@ -76,8 +76,10 @@ export default buildConfig({
       max: 2,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 15000,
-      ssl: { rejectUnauthorized: false },
-      // Required for Supabase pgbouncer session pooling
+      // SSL: accept self-signed certs (required for Supabase pooler)
+      ssl: process.env.POSTGRES_URL
+        ? { rejectUnauthorized: false, checkServerIdentity: () => undefined }
+        : false,
       application_name: 'capital-upfitters-cms',
     },
     // Disable prepared statements — required for Supabase pgbouncer
