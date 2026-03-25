@@ -1,7 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
-import { postgresAdapter } from '@payloadcms/db-postgres'
+import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
 import { Services } from './payload/collections/Services'
@@ -73,17 +73,11 @@ export default buildConfig({
   ],
   globals: [Settings],
   editor: lexicalEditor(),
-  db: postgresAdapter({
+  db: vercelPostgresAdapter({
+    // Neon serverless — HTTP transport, no connection limits, perfect for Vercel
+    // Set POSTGRES_URL in Vercel env vars to your Neon connection string
     pool: {
-      // Neon (neon.tech) — native serverless Postgres, no prepared statement conflicts
-      // Supports Vercel serverless + Payload CMS v3 out of the box
-      // Env var: DATABASE_URL (set in Vercel dashboard from Neon integration)
-      connectionString: process.env.DATABASE_URL,
-      max: 3,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 15000,
-      ssl: { rejectUnauthorized: false, checkServerIdentity: () => undefined },
-      application_name: 'capital-upfitters-cms',
+      connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
     },
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',
