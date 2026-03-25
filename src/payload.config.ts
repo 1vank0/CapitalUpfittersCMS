@@ -28,6 +28,8 @@ export default buildConfig({
     meta: {
       titleSuffix: '— Capital Upfitters CMS',
       favicon: '/favicon.ico',
+      ogImage: '/og-image.jpg',
+      description: 'Operational control center for capitalupfitters.com',
     },
     user: 'users',
     autoLogin:

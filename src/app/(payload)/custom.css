@@ -1,2 +1,389 @@
-/* Capital Upfitters — Payload Admin custom overrides */
-/* Minimal overrides — Payload CMS handles all base styling */
+/* ═══════════════════════════════════════════════════════════════
+   CAPITAL UPFITTERS CMS — Admin UI Brand Theme
+   Matches Phase 1 design: #111827 nav, #203055 accent, Inter body
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── GLOBAL OVERRIDES ──────────────────────────────────────── */
+:root {
+  --color-base-0: #ffffff;
+  --color-base-50: #f9fafb;
+  --color-base-100: #f3f4f6;
+  --color-base-150: #e5e7eb;
+  --color-base-200: #d1d5db;
+  --color-base-250: #9ca3af;
+  --color-base-300: #6b7280;
+  --color-base-400: #374151;
+  --color-base-500: #1a2332;
+  --color-base-600: #111827;
+  --color-base-700: #0d131e;
+  --color-base-800: #080d14;
+  --color-base-850: #050a10;
+  --color-base-900: #020508;
+  --color-base-1000: #000000;
+
+  --color-success-50: #f0fdf4;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+
+  --color-error-50: #fef2f2;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+
+  --color-warning-50: #fffbeb;
+  --color-warning-500: #eab308;
+
+  /* Brand accent = Capital Upfitters navy #203055 */
+  --color-elevation-0: #ffffff;
+  --color-elevation-50: #f9fafb;
+  --color-elevation-100: #f3f4f6;
+  --color-elevation-150: #e5e7eb;
+  --color-elevation-200: #d1d5db;
+  --color-elevation-500: #1a2332;
+  --color-elevation-1000: #111827;
+}
+
+/* ── TYPOGRAPHY ────────────────────────────────────────────── */
+body,
+.payload-default__template-minimal,
+.template-default,
+[class*="payload"] {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+/* ── NAV / SIDEBAR ─────────────────────────────────────────── */
+.nav,
+.nav__wrap,
+.nav-inner,
+[class*="nav__"],
+.payload__nav {
+  background: #111827 !important;
+  border-right: 1px solid #1a2332 !important;
+}
+
+/* Nav links */
+.nav__link,
+.nav a,
+.nav-group a {
+  color: #e5e7eb !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  border-radius: 6px !important;
+  transition: background 0.15s, color 0.15s !important;
+}
+
+.nav__link:hover,
+.nav a:hover,
+.nav-group a:hover {
+  background: rgba(32, 48, 85, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.nav__link--active,
+.nav a[aria-current],
+.nav a.active {
+  background: #203055 !important;
+  color: #ffffff !important;
+}
+
+/* Nav group labels */
+.nav-group__label,
+[class*="nav-group__label"] {
+  color: #6b7280 !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* ── BRAND LOGO AREA ───────────────────────────────────────── */
+.nav__header,
+.nav__brand,
+[class*="nav__header"],
+[class*="nav__logo"] {
+  background: #111827 !important;
+  border-bottom: 1px solid #1a2332 !important;
+  padding: 1rem 1.25rem !important;
+}
+
+.nav__brand::before,
+.nav__header::before {
+  content: "CAPITAL UPFITTERS";
+  font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  color: #ffffff !important;
+  text-transform: uppercase !important;
+}
+
+/* Hide default Payload logo, show our text */
+.nav__brand img,
+.nav__header img,
+.nav__header svg:not([class*="icon"]) {
+  display: none !important;
+}
+
+/* ── TOP APP BAR ───────────────────────────────────────────── */
+.app-header,
+header.app-header {
+  background: #ffffff !important;
+  border-bottom: 2px solid #203055 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+}
+
+/* ── BUTTONS ───────────────────────────────────────────────── */
+.btn--style-primary,
+button[class*="btn--style-primary"],
+.btn.btn--style-primary {
+  background: #203055 !important;
+  border-color: #203055 !important;
+  color: #ffffff !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  transition: background 0.15s !important;
+}
+
+.btn--style-primary:hover,
+button[class*="btn--style-primary"]:hover {
+  background: #162240 !important;
+  border-color: #162240 !important;
+}
+
+.btn--style-secondary,
+button[class*="btn--style-secondary"] {
+  border-color: #203055 !important;
+  color: #203055 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+.btn--style-secondary:hover {
+  background: rgba(32, 48, 85, 0.06) !important;
+}
+
+/* Save/publish buttons */
+[class*="doc-controls"] button[class*="primary"],
+.doc-controls__controls-wrapper button {
+  background: #203055 !important;
+  border-color: #203055 !important;
+}
+
+/* ── FORM FIELDS ───────────────────────────────────────────── */
+.field-type.text input,
+.field-type.email input,
+.field-type.number input,
+.field-type.textarea textarea,
+.field-type.select select,
+input[class*="text-input"],
+textarea[class*="textarea"],
+[class*="field-type"] input,
+[class*="field-type"] textarea {
+  border-color: #e5e7eb !important;
+  border-radius: 8px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.875rem !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+
+[class*="field-type"] input:focus,
+[class*="field-type"] textarea:focus {
+  border-color: #203055 !important;
+  box-shadow: 0 0 0 3px rgba(32, 48, 85, 0.12) !important;
+  outline: none !important;
+}
+
+/* Field labels */
+.field-label,
+label[class*="field-label"] {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* ── TABLES / LIST VIEW ────────────────────────────────────── */
+.table th,
+[class*="table"] th {
+  background: #f9fafb !important;
+  color: #374151 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  border-bottom: 2px solid #e5e7eb !important;
+}
+
+.table tr:hover td,
+[class*="table"] tr:hover td {
+  background: rgba(32, 48, 85, 0.03) !important;
+}
+
+/* Checkbox accent */
+input[type="checkbox"]:checked {
+  accent-color: #203055 !important;
+}
+
+/* ── COLLECTION / PAGE HEADERS ─────────────────────────────── */
+.collection-list__header h1,
+.collection-list__header h2,
+.doc-header__content h1,
+.doc-header__content h2,
+.collection-edit__header h1,
+[class*="list-header"] h1,
+[class*="doc-header"] h1 {
+  font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: #111827 !important;
+  text-transform: uppercase !important;
+}
+
+/* ── BREADCRUMB ────────────────────────────────────────────── */
+.step-nav,
+[class*="step-nav"] {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.8125rem !important;
+}
+
+.step-nav a {
+  color: #203055 !important;
+}
+
+/* ── DASHBOARD CARDS ───────────────────────────────────────── */
+.dashboard-card,
+[class*="dashboard-card"],
+[class*="collection-card"] {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+  overflow: hidden !important;
+}
+
+.dashboard-card:hover,
+[class*="dashboard-card"]:hover,
+[class*="collection-card"]:hover {
+  border-color: #203055 !important;
+  box-shadow: 0 4px 16px rgba(32, 48, 85, 0.12) !important;
+}
+
+/* ── BADGES / STATUS ───────────────────────────────────────── */
+.pill,
+[class*="pill"] {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  border-radius: 4px !important;
+}
+
+/* ── MODALS ────────────────────────────────────────────────── */
+.drawer__header,
+.modal__header,
+[class*="drawer__header"],
+[class*="modal__header"] {
+  background: #111827 !important;
+  color: #ffffff !important;
+}
+
+.drawer__header h2,
+.modal__header h2,
+[class*="drawer__header"] h2 {
+  font-family: 'Barlow Condensed', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+/* ── PAGINATION ────────────────────────────────────────────── */
+.pagination__page-number--is-active,
+[class*="pagination"] [aria-current="page"] {
+  background: #203055 !important;
+  color: #ffffff !important;
+  border-color: #203055 !important;
+}
+
+/* ── TOAST NOTIFICATIONS ───────────────────────────────────── */
+[class*="toast--success"],
+[class*="toast"][class*="success"] {
+  background: #203055 !important;
+  border-color: #162240 !important;
+}
+
+/* ── LOGIN PAGE ────────────────────────────────────────────── */
+.template-minimal,
+[class*="template-minimal"] {
+  background: #111827 !important;
+}
+
+.template-minimal__wrap,
+[class*="template-minimal__wrap"] {
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+}
+
+/* Login logo */
+.login__logo,
+[class*="login__logo"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.login__logo::before,
+[class*="login__logo"]::before {
+  content: "CAPITAL UPFITTERS" !important;
+  font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif !important;
+  font-size: 1.5rem !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.1em !important;
+  color: #111827 !important;
+  text-transform: uppercase !important;
+}
+
+.login__logo img,
+.login__logo svg {
+  display: none !important;
+}
+
+/* Login heading */
+.login__intro,
+[class*="login__intro"] {
+  font-family: 'Inter', sans-serif !important;
+  color: #6b7280 !important;
+  font-size: 0.875rem !important;
+  text-align: center !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* ── SCROLLBARS ────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #203055;
+}
+
+/* ── SELECTION ─────────────────────────────────────────────── */
+::selection {
+  background: rgba(32, 48, 85, 0.15) !important;
+  color: #111827 !important;
+}
