@@ -71,7 +71,8 @@ export default buildConfig({
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL,
+      // Supports both DATABASE_URL and Vercel Supabase integration variable names
+      connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL,
       max: 2,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 15000,
