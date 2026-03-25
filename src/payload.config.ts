@@ -81,16 +81,20 @@ export default buildConfig({
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_PRISMA_URL,
+      // POSTGRES_URL_NON_POOLING = direct connection required for Payload's prepared statements
+      // pgbouncer transaction pooling (POSTGRES_URL port 6543) rejects prepared statements
+      connectionString:
+        process.env.DATABASE_URL ||
+        process.env.POSTGRES_URL_NON_POOLING ||
+        process.env.POSTGRES_PRISMA_URL ||
+        process.env.POSTGRES_URL,
       max: 2,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 15000,
       ssl: { rejectUnauthorized: false },
       application_name: 'capital-upfitters-cms',
     },
-    // Push schema directly to DB — creates all tables on first run
-    // Safe for production when no existing data; skip after first successful deploy
-    push: process.env.PAYLOAD_DB_PUSH !== 'false',
+
   }),
   secret: process.env.PAYLOAD_SECRET || 'capital-upfitters-cms-secret-change-in-production',
   cors: [
