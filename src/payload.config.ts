@@ -28,6 +28,7 @@ export default buildConfig({
   admin: {
     importMap: {
       baseDir: path.resolve(dirname, '..'),
+      autoGenerate: false,
     },
     meta: {
       titleSuffix: '— Capital Upfitters CMS',

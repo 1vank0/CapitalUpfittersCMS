@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node --import tsx/esm --no-warnings=ExperimentalWarning node_modules/payload/bin.js generate:importmap && next build",
+    "build": "next build",
     "predev": "payload generate:importmap",
     "start": "next start",
     "lint": "next lint",
