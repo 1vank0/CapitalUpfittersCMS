@@ -82,7 +82,7 @@ export default buildConfig({
       max: 3,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 15000,
-      ssl: { rejectUnauthorized: false },
+      ssl: { rejectUnauthorized: false, checkServerIdentity: () => undefined },
       application_name: 'capital-upfitters-cms',
     },
   }),
