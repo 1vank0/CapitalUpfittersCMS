@@ -480,6 +480,15 @@ export async function GET(request: Request) {
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     )`)
 
+    // SETTINGS_STATS_ITEMS — stats.items array from Settings.ts (was missing from CREATE list)
+    await run('settings_stats_items', `CREATE TABLE IF NOT EXISTS "settings_stats_items" (
+      "_order" integer NOT NULL,
+      "_parent_id" integer NOT NULL REFERENCES "settings"("id") ON DELETE CASCADE,
+      "id" varchar PRIMARY KEY,
+      "value" varchar,
+      "label" varchar
+    )`)
+
     await run('settings_rels', `CREATE TABLE IF NOT EXISTS "settings_rels" (
       "id" serial PRIMARY KEY,
       "order" integer,
