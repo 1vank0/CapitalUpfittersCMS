@@ -13,6 +13,7 @@ import { FAQs } from './payload/collections/FAQs'
 import { Tags } from './payload/collections/Tags'
 import { Leads } from './payload/collections/Leads'
 import { Quotes } from './payload/collections/Quotes'
+import { AccountRequests } from './payload/collections/AccountRequests'
 import { Settings } from './payload/globals/Settings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -52,10 +53,17 @@ export default buildConfig({
     // ─── Operations ────────────────────────────────────────
     Leads,
     Quotes,
+    AccountRequests,
     // ─── System ────────────────────────────────────────────
     {
       slug: 'users',
-      auth: true,
+      auth: {
+        tokenExpiration: 7200,
+        cookies: {
+          secure: true,
+          sameSite: 'None',
+        },
+      },
       admin: {
         useAsTitle: 'email',
         group: 'Configuration',
