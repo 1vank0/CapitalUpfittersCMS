@@ -99,12 +99,8 @@ export default buildConfig({
     'http://localhost:3000',
     process.env.NEXT_PUBLIC_SERVER_URL || '',
   ].filter(Boolean),
-  csrf: [
-    'https://capitalupfitters.com',
-    'https://www.capitalupfitters.com',
-    'http://localhost:3000',
-    process.env.NEXT_PUBLIC_SERVER_URL || '',
-  ].filter(Boolean),
+  // csrf: [] — empty bypasses Sec-Fetch-Site check in extractJWT; SameSite=Lax cookie handles CSRF at browser level
+  csrf: [],
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
