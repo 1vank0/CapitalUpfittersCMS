@@ -132,24 +132,7 @@ export async function GET(request: Request) {
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     )`)
 
-    // payload_locked_documents_rels — needs FK for every lockable collection (polymorphic document field) + users (user field)
-    await run('payload_locked_documents_rels', `CREATE TABLE IF NOT EXISTS "payload_locked_documents_rels" (
-      "id" serial PRIMARY KEY,
-      "order" integer,
-      "parent_id" integer NOT NULL REFERENCES "payload_locked_documents"("id") ON DELETE CASCADE,
-      "path" varchar NOT NULL,
-      "services_id" integer REFERENCES "services"("id") ON DELETE CASCADE,
-      "pages_id" integer REFERENCES "pages"("id") ON DELETE CASCADE,
-      "geo_pages_id" integer REFERENCES "geo_pages"("id") ON DELETE CASCADE,
-      "media_id" integer REFERENCES "media"("id") ON DELETE CASCADE,
-      "testimonials_id" integer REFERENCES "testimonials"("id") ON DELETE CASCADE,
-      "faqs_id" integer REFERENCES "faqs"("id") ON DELETE CASCADE,
-      "tags_id" integer REFERENCES "tags"("id") ON DELETE CASCADE,
-      "leads_id" integer REFERENCES "leads"("id") ON DELETE CASCADE,
-      "quotes_id" integer REFERENCES "quotes"("id") ON DELETE CASCADE,
-      "account_requests_id" integer REFERENCES "account_requests"("id") ON DELETE CASCADE,
-      "users_id" integer REFERENCES "users"("id") ON DELETE CASCADE
-    )`)
+    // payload_locked_documents_rels — MOVED to after all collection tables are created (FK dependency)
 
     await run('payload_kv', `CREATE TABLE IF NOT EXISTS "payload_kv" (
       "id" serial PRIMARY KEY,
@@ -461,6 +444,25 @@ export async function GET(request: Request) {
       "ip_address" varchar,
       "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
+    )`)
+
+    // payload_locked_documents_rels — here AFTER all collection tables exist (all FKs can resolve)
+    await run('payload_locked_documents_rels', `CREATE TABLE IF NOT EXISTS "payload_locked_documents_rels" (
+      "id" serial PRIMARY KEY,
+      "order" integer,
+      "parent_id" integer NOT NULL REFERENCES "payload_locked_documents"("id") ON DELETE CASCADE,
+      "path" varchar NOT NULL,
+      "services_id" integer REFERENCES "services"("id") ON DELETE CASCADE,
+      "pages_id" integer REFERENCES "pages"("id") ON DELETE CASCADE,
+      "geo_pages_id" integer REFERENCES "geo_pages"("id") ON DELETE CASCADE,
+      "media_id" integer REFERENCES "media"("id") ON DELETE CASCADE,
+      "testimonials_id" integer REFERENCES "testimonials"("id") ON DELETE CASCADE,
+      "faqs_id" integer REFERENCES "faqs"("id") ON DELETE CASCADE,
+      "tags_id" integer REFERENCES "tags"("id") ON DELETE CASCADE,
+      "leads_id" integer REFERENCES "leads"("id") ON DELETE CASCADE,
+      "quotes_id" integer REFERENCES "quotes"("id") ON DELETE CASCADE,
+      "account_requests_id" integer REFERENCES "account_requests"("id") ON DELETE CASCADE,
+      "users_id" integer REFERENCES "users"("id") ON DELETE CASCADE
     )`)
 
     // SETTINGS — no special char defaults
