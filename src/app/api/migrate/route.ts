@@ -452,41 +452,32 @@ export async function GET(request: Request) {
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     )`)
 
-    // SETTINGS — with seo_default_og_image_id
+    // SETTINGS — no special char defaults
     await run('settings', `CREATE TABLE IF NOT EXISTS "settings" (
       "id" serial PRIMARY KEY,
-      "business_name" varchar DEFAULT 'Capital Upfitters',
-      "contact_phone" varchar DEFAULT '(301) 555-0100',
+      "business_name" varchar,
+      "contact_phone" varchar,
       "contact_email" varchar,
-      "contact_address" varchar DEFAULT 'Rockville, MD',
+      "contact_address" varchar,
       "contact_full_address" varchar,
-      "hours_weekdays" varchar DEFAULT 'Mon–Fri: 8am–5pm',
-      "hours_saturday" varchar DEFAULT 'Sat: 9am–2pm',
-      "hours_sunday" varchar DEFAULT 'Closed',
+      "hours_weekdays" varchar,
+      "hours_saturday" varchar,
+      "hours_sunday" varchar,
       "social_facebook" varchar,
       "social_instagram" varchar,
       "social_youtube" varchar,
       "social_google" varchar,
-      "seo_default_title" varchar DEFAULT 'Capital Upfitters | Vehicle Upfitting Rockville MD',
+      "seo_default_title" varchar,
       "seo_default_description" varchar,
       "seo_default_og_image_id" integer REFERENCES "media"("id") ON DELETE SET NULL,
       "urgency_enabled" boolean DEFAULT true,
-      "urgency_message1" varchar DEFAULT 'Same-week appointments available — call now',
-      "urgency_message2" varchar DEFAULT 'Fleet pricing available — no minimums',
-      "portal_url" varchar DEFAULT 'https://upfit-portal-58190af9.base44.app',
+      "urgency_message1" varchar,
+      "urgency_message2" varchar,
+      "portal_url" varchar,
       "portal_register_url" varchar,
       "portal_login_url" varchar,
       "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
-    `)
-
-    // SETTINGS_STATS_ITEMS (appears in schema)
-    await run('settings_stats_items', `CREATE TABLE IF NOT EXISTS "settings_stats_items" (
-      "_order" integer NOT NULL,
-      "_parent_id" integer NOT NULL REFERENCES "settings"("id") ON DELETE CASCADE,
-      "id" varchar PRIMARY KEY,
-      "label" varchar,
-      "value" varchar
     )`)
 
     await run('settings_rels', `CREATE TABLE IF NOT EXISTS "settings_rels" (
