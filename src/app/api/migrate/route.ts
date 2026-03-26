@@ -223,9 +223,9 @@ export async function GET(request: Request) {
     )`)
     await run('services_slug_idx', `CREATE UNIQUE INDEX IF NOT EXISTS "services_slug_idx" ON "services" ("slug")`)
 
-    // SERVICES_AUDIENCE — note: uses "parent_id" not "_parent_id"
+    // SERVICES_AUDIENCE — uses "parent_id", "order" (not _parent_id, _order)
     await run('services_audience', `CREATE TABLE IF NOT EXISTS "services_audience" (
-      "_order" integer NOT NULL,
+      "order" integer NOT NULL,
       "parent_id" integer NOT NULL REFERENCES "services"("id") ON DELETE CASCADE,
       "id" varchar PRIMARY KEY,
       "value" varchar
@@ -362,9 +362,9 @@ export async function GET(request: Request) {
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     )`)
 
-    // FAQS_AUDIENCE — uses "parent_id", "value", "order" (not _parent_id)
+    // FAQS_AUDIENCE — uses "parent_id", "order" (not _parent_id, _order)
     await run('faqs_audience', `CREATE TABLE IF NOT EXISTS "faqs_audience" (
-      "_order" integer NOT NULL,
+      "order" integer NOT NULL,
       "parent_id" integer NOT NULL REFERENCES "faqs"("id") ON DELETE CASCADE,
       "id" varchar PRIMARY KEY,
       "value" varchar
@@ -473,9 +473,12 @@ export async function GET(request: Request) {
       "urgency_enabled" boolean DEFAULT true,
       "urgency_message1" varchar DEFAULT 'Same-week appointments available — call now',
       "urgency_message2" varchar DEFAULT 'Fleet pricing available — no minimums',
+      "portal_url" varchar DEFAULT 'https://upfit-portal-58190af9.base44.app',
+      "portal_register_url" varchar,
+      "portal_login_url" varchar,
       "updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
-    )`)
+    `)
 
     // SETTINGS_STATS_ITEMS (appears in schema)
     await run('settings_stats_items', `CREATE TABLE IF NOT EXISTS "settings_stats_items" (
