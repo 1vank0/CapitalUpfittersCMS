@@ -61,7 +61,8 @@ export default buildConfig({
         tokenExpiration: 7200,
         cookies: {
           secure: true,
-          sameSite: 'None',
+          sameSite: 'Lax',
+          domain: 'capital-upfitters-cms.vercel.app',
         },
       },
       admin: {
