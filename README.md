@@ -116,3 +116,112 @@ This CMS is designed to plug into IVANKO OS Phase 2:
 - Settings global = single source of truth for all business info
 - Media collection = centralized asset management
 - Extendable to multi-location without schema changes
+
+---
+
+## Cedar Planter Marketplace Automation (CLI/Desktop-friendly)
+
+Use `scripts/fb-marketplace-bot.mjs` to run a local Facebook Marketplace workflow that accepts intake input, scrapes website data, and drives posting actions with Playwright browser automation.
+
+```bash
+# 1) Initialize local config/state
+node scripts/fb-marketplace-bot.mjs init
+
+# 2) Add from direct input
+node scripts/fb-marketplace-bot.mjs add-listing --title "Cedar Planter 18x36" --price 90 --description "Handmade cedar planter" --location "Gaithersburg, MD"
+
+# 3) Or scrape a source page and convert it into a listing draft
+node scripts/fb-marketplace-bot.mjs add-from-url "https://example.com/product" --price 90 --location "Gaithersburg, MD"
+
+# 4) View/update listing drafts
+node scripts/fb-marketplace-bot.mjs listings
+node scripts/fb-marketplace-bot.mjs update-listing <id> --price 95
+
+# 5) Marketplace actions
+node scripts/fb-marketplace-bot.mjs post <id>
+node scripts/fb-marketplace-bot.mjs renew <id>
+node scripts/fb-marketplace-bot.mjs mark-sold <id>
+node scripts/fb-marketplace-bot.mjs delete <id>
+
+# 6) Daily automation mode (use with cron / Task Scheduler)
+node scripts/fb-marketplace-bot.mjs enable-daily
+node scripts/fb-marketplace-bot.mjs run-daily
+```
+
+Notes:
+- Script persists local state in `.bot-data/`.
+- First run may require manual Facebook login/challenges; session is saved to `.bot-data/facebook-storage-state.json`.
+- Facebook UI selectors can change over time and may need periodic updates in the script.
+
+### Desktop UI (Local)
+
+A lightweight Electron desktop app is included for local control of the Marketplace bot.
+
+```bash
+npm install
+npm run bot:desktop
+```
+
+Desktop UI features:
+- Initialize bot state
+- Add listing by title/price/description/location
+- Add listing from URL scrape
+- Trigger post/renew/mark sold/delete actions by listing ID
+- View command output directly in the app
+
+## GitHub Actions: Scheduled Marketplace + Vercel Deploy
+
+Two ready-to-use workflows are included:
+
+1. **`.github/workflows/marketplace-daily.yml`**
+   - Runs daily (`run-daily`) and can also be launched manually.
+   - Installs Playwright Chromium and runs the Marketplace bot.
+
+2. **`.github/workflows/vercel-deploy.yml`**
+   - Deploys to Vercel on `main` pushes and manual dispatch.
+
+### Required GitHub Secrets
+
+For Marketplace daily automation:
+- `FB_STORAGE_STATE_B64`: base64-encoded Playwright storage state JSON for your logged-in Facebook session.
+
+For Vercel deployment:
+- `VERCEL_TOKEN`
+
+### Optional Vercel Project/Org Configuration
+
+If your Vercel account does not auto-detect the project, add:
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Then update the workflow commands to include these environment variables.
+
+### Generate `FB_STORAGE_STATE_B64`
+
+From your local machine (after successfully logging into Facebook with Playwright and saving `.bot-data/facebook-storage-state.json`):
+
+```bash
+base64 -w 0 .bot-data/facebook-storage-state.json
+```
+
+Copy the output into the `FB_STORAGE_STATE_B64` GitHub secret.
+
+
+## Publish to GitHub as "Facebook Bot"
+
+To publish this project on GitHub as a Facebook bot package:
+
+1. Push the repository/branch to GitHub.
+2. Add Actions secrets (`FB_STORAGE_STATE_B64`, `VERCEL_TOKEN`).
+3. Run workflows from the Actions tab.
+4. Optionally rename the repository to `facebook-bot` and add topic `facebook-bot`.
+5. Reference `.github/FACEBOOK_BOT.md` as the operator runbook.
+
+
+### One-command GitHub publish
+
+```bash
+GITHUB_OWNER=<your-user-or-org> GITHUB_REPO=facebook-bot ./scripts/publish-facebook-bot.sh
+```
+
+This helper will create/reuse the GitHub repo, push your current branch, and add the `facebook-bot` topic.
