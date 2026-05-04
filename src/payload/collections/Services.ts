@@ -1,5 +1,11 @@
 import type { CollectionConfig } from 'payload'
+import { orgRelationship, defaultOrgOnCreate, orgReadAccess, orgWriteAccess } from '../utils/orgScope'
+import { seoFieldGroup } from '../utils/seoFields'
 
+/**
+ * Services — full set of services Capital Upfitters offers, expandable
+ * per-organization. Categories cover the 12 specified types.
+ */
 export const Services: CollectionConfig = {
   slug: 'services',
   admin: {
@@ -7,33 +13,43 @@ export const Services: CollectionConfig = {
     group: 'Content',
     defaultColumns: ['name', 'category', 'priceFrom', 'active'],
   },
+  access: {
+    create: orgWriteAccess,
+    read: orgReadAccess,
+    update: orgWriteAccess,
+    delete: orgWriteAccess,
+  },
+  hooks: {
+    beforeChange: [defaultOrgOnCreate],
+  },
   fields: [
-    {
-      name: 'name',
-      type: 'text',
-      required: true,
-      label: 'Service Name',
-    },
+    orgRelationship,
+    { name: 'name', type: 'text', required: true, label: 'Service Name' },
     {
       name: 'slug',
       type: 'text',
       required: true,
       unique: true,
+      index: true,
       label: 'URL Slug',
-      admin: {
-        description: 'e.g. bedliner, ceramic-coating, hitches',
-      },
     },
     {
       name: 'category',
       type: 'select',
       required: true,
       options: [
-        { label: 'Protective Coatings', value: 'coatings' },
-        { label: 'Towing & Hitches', value: 'hitches' },
-        { label: 'Accessories', value: 'accessories' },
-        { label: 'Fleet & Commercial', value: 'fleet' },
-        { label: 'Wraps & Graphics', value: 'wraps' },
+        { label: 'Spray-In Bedliners', value: 'bedliners' },
+        { label: 'Hitches & Towing', value: 'hitches' },
+        { label: 'Undercoating & Rust Protection', value: 'undercoating' },
+        { label: 'Ceramic Coating & PPF', value: 'ceramic-ppf' },
+        { label: 'Truck Accessories', value: 'accessories' },
+        { label: 'Tonneau Covers', value: 'tonneau' },
+        { label: 'Running Boards & Steps', value: 'running-boards' },
+        { label: 'Commercial Van Upfits', value: 'van-upfits' },
+        { label: 'Fleet Upfitting', value: 'fleet' },
+        { label: 'Dealer Services', value: 'dealer' },
+        { label: 'Government / Municipal Services', value: 'government' },
+        { label: 'Industrial Protective Coatings', value: 'industrial' },
       ],
     },
     {
@@ -48,35 +64,34 @@ export const Services: CollectionConfig = {
       ],
     },
     {
+      name: 'targetCustomers',
+      type: 'array',
+      label: 'Target Customer Profiles',
+      fields: [{ name: 'profile', type: 'text' }],
+    },
+    {
       type: 'row',
       fields: [
-        {
-          name: 'priceFrom',
-          type: 'number',
-          label: 'Price From ($)',
-          admin: { width: '50%' },
-        },
-        {
-          name: 'priceTo',
-          type: 'number',
-          label: 'Price To ($)',
-          admin: { width: '50%' },
-        },
+        { name: 'priceFrom', type: 'number', label: 'Price From ($)', admin: { width: '50%' } },
+        { name: 'priceTo', type: 'number', label: 'Price To ($)', admin: { width: '50%' } },
       ],
     },
     {
       name: 'priceLabel',
       type: 'text',
       label: 'Price Display Label',
-      admin: {
-        description: 'e.g. "Starting at $499" — overrides numeric price if set',
-      },
+      admin: { description: 'e.g. "Starting at $499" — overrides numeric range if set' },
     },
     {
       name: 'tagline',
       type: 'text',
       label: 'Short Tagline',
-      admin: { description: 'One-line pitch shown on cards and hero' },
+    },
+    {
+      name: 'shortDescription',
+      type: 'textarea',
+      label: 'Short Description',
+      admin: { description: 'For service cards and previews. 1–2 sentences.' },
     },
     {
       name: 'description',
@@ -87,12 +102,32 @@ export const Services: CollectionConfig = {
       name: 'features',
       type: 'array',
       label: 'Feature Bullets',
+      fields: [{ name: 'feature', type: 'text' }],
+    },
+    {
+      name: 'popularAddOns',
+      type: 'array',
+      label: 'Popular Add-Ons',
       fields: [
-        {
-          name: 'feature',
-          type: 'text',
-        },
+        { name: 'name', type: 'text' },
+        { name: 'price', type: 'text' },
+        { name: 'description', type: 'text' },
       ],
+    },
+    {
+      name: 'warranty',
+      type: 'text',
+      label: 'Warranty Summary',
+    },
+    {
+      name: 'warrantyNotes',
+      type: 'textarea',
+      label: 'Warranty Notes (full terms)',
+    },
+    {
+      name: 'turnaround',
+      type: 'text',
+      label: 'Turnaround Time',
     },
     {
       name: 'faqItems',
@@ -107,56 +142,45 @@ export const Services: CollectionConfig = {
       name: 'heroImage',
       type: 'upload',
       relationTo: 'media',
-      label: 'Hero Image',
     },
     {
       name: 'galleryImages',
       type: 'array',
       label: 'Gallery Images',
       fields: [
-        {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-        },
-        {
-          name: 'caption',
-          type: 'text',
-        },
+        { name: 'image', type: 'upload', relationTo: 'media' },
+        { name: 'caption', type: 'text' },
       ],
     },
     {
-      name: 'turnaround',
-      type: 'text',
-      label: 'Turnaround Time',
-      admin: { description: 'e.g. "Same day" or "1–2 business days"' },
+      name: 'relatedServices',
+      type: 'relationship',
+      relationTo: 'services',
+      hasMany: true,
+      label: 'Related Services',
     },
     {
-      name: 'warranty',
-      type: 'text',
-      label: 'Warranty',
-    },
-    {
-      name: 'seo',
+      name: 'cta',
       type: 'group',
-      label: 'SEO',
+      label: 'Service CTA',
       fields: [
-        { name: 'metaTitle', type: 'text', label: 'Meta Title' },
-        { name: 'metaDescription', type: 'textarea', label: 'Meta Description' },
-        { name: 'keywords', type: 'text', label: 'Keywords (comma-separated)' },
+        { name: 'label', type: 'text', defaultValue: 'Get a Quote' },
+        { name: 'url', type: 'text', defaultValue: '/quote.html' },
       ],
     },
+    seoFieldGroup,
     {
       name: 'active',
       type: 'checkbox',
       defaultValue: true,
       label: 'Active (visible on site)',
+      admin: { position: 'sidebar' },
     },
     {
       name: 'sortOrder',
       type: 'number',
-      label: 'Sort Order',
       defaultValue: 99,
+      admin: { position: 'sidebar' },
     },
   ],
   timestamps: true,

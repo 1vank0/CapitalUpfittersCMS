@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { orgRelationship, defaultOrgOnCreate, orgReadAccess } from '../utils/orgScope'
 
 export const Quotes: CollectionConfig = {
   slug: 'quotes',
@@ -10,11 +11,15 @@ export const Quotes: CollectionConfig = {
   },
   access: {
     create: ({ req }) => !!req.user,
-    read: ({ req }) => !!req.user,
+    read: orgReadAccess,
     update: ({ req }) => !!req.user,
     delete: ({ req }) => !!req.user,
   },
+  hooks: {
+    beforeChange: [defaultOrgOnCreate],
+  },
   fields: [
+    orgRelationship,
     {
       name: 'refId',
       type: 'text',

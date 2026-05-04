@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 
 export default function RootPage() {
-  redirect('/admin')
+  // The Upfit Portal is the new front door. Legacy /admin remains available.
+  redirect('/portal')
 }

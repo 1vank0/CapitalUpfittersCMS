@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getPayload } from 'payload'
+import { getPayload, type Where } from 'payload'
 import config from '@payload-config'
 
 export const dynamic = 'force-dynamic'
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
 
     const payload = await getPayload({ config })
 
-    const where: Record<string, unknown> = { active: { equals: true } }
+    const where: Where = { active: { equals: true } }
     if (slug) where.slug = { equals: slug }
 
     const result = await payload.find({

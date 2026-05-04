@@ -1,5 +1,10 @@
 import type { CollectionConfig } from 'payload'
+import { orgRelationship, defaultOrgOnCreate, orgReadAccess } from '../utils/orgScope'
 
+/**
+ * Leads — every form submission lands here. Public can create (forms),
+ * authenticated org users read/update.
+ */
 export const Leads: CollectionConfig = {
   slug: 'leads',
   admin: {
@@ -10,24 +15,62 @@ export const Leads: CollectionConfig = {
   },
   access: {
     create: () => true, // Public — forms POST here
-    read: ({ req }) => !!req.user,
+    read: orgReadAccess,
     update: ({ req }) => !!req.user,
     delete: ({ req }) => !!req.user,
   },
   hooks: {
     beforeChange: [
+      // refId generator (existing logic)
       ({ data }) => {
         if (!data.refId) {
-          const prefix = data.leadType === 'fleet' ? 'FL' : data.leadType === 'dealer' ? 'DA' : data.leadType === 'commercial' ? 'CC' : 'CU'
+          const prefix =
+            data.leadType === 'fleet'
+              ? 'FL'
+              : data.leadType === 'dealer'
+              ? 'DA'
+              : data.leadType === 'commercial'
+              ? 'CC'
+              : 'CU'
           const date = new Date().toISOString().slice(0, 10).replace(/-/g, '')
           const rand = Math.floor(1000 + Math.random() * 9000)
           data.refId = `${prefix}-${date}-${rand}`
         }
         return data
       },
+      // Org default: if no org set on a public submission, use the
+      // organization configured in the Settings global.
+      async ({ data, req, operation }) => {
+        if (operation === 'create' && !data.organization) {
+          if (req.user) {
+            // Authenticated path
+            const fromUser = (
+              req.user as { defaultOrganization?: string | number }
+            ).defaultOrganization
+            if (fromUser) data.organization = fromUser
+          }
+          if (!data.organization) {
+            // Public submission — fall back to first active org (Capital Upfitters)
+            try {
+              const orgs = await req.payload.find({
+                collection: 'organizations',
+                where: { status: { equals: 'active' } },
+                limit: 1,
+                sort: 'createdAt',
+              })
+              if (orgs.docs[0]) data.organization = orgs.docs[0].id
+            } catch {
+              // Non-fatal
+            }
+          }
+        }
+        return data
+      },
+      defaultOrgOnCreate,
     ],
   },
   fields: [
+    orgRelationship,
     {
       name: 'refId',
       type: 'text',
@@ -55,22 +98,36 @@ export const Leads: CollectionConfig = {
       options: [
         { label: '🆕 New', value: 'new' },
         { label: '📞 Contacted', value: 'contacted' },
-        { label: '💬 In Discussion', value: 'in-discussion' },
-        { label: '✅ Booked', value: 'booked' },
+        { label: '💬 Quoted', value: 'quoted' },
+        { label: '📅 Scheduled', value: 'scheduled' },
+        { label: '✅ Won', value: 'won' },
         { label: '❌ Lost', value: 'lost' },
       ],
+      admin: { position: 'sidebar' },
+    },
+    {
+      name: 'priority',
+      type: 'select',
+      defaultValue: 'normal',
+      options: [
+        { label: 'Low', value: 'low' },
+        { label: 'Normal', value: 'normal' },
+        { label: 'High', value: 'high' },
+        { label: 'Urgent', value: 'urgent' },
+      ],
+      admin: { position: 'sidebar' },
     },
     {
       type: 'row',
       fields: [
-        { name: 'name', type: 'text', required: true, label: 'Name', admin: { width: '50%' } },
-        { name: 'phone', type: 'text', label: 'Phone', admin: { width: '50%' } },
+        { name: 'name', type: 'text', required: true, admin: { width: '50%' } },
+        { name: 'phone', type: 'text', admin: { width: '50%' } },
       ],
     },
     {
       type: 'row',
       fields: [
-        { name: 'email', type: 'email', label: 'Email', admin: { width: '50%' } },
+        { name: 'email', type: 'email', admin: { width: '50%' } },
         { name: 'company', type: 'text', label: 'Company / Fleet Name', admin: { width: '50%' } },
       ],
     },
@@ -94,15 +151,11 @@ export const Leads: CollectionConfig = {
             { label: 'Other', value: 'other' },
           ],
         },
-        { name: 'vehicleYear', type: 'text', label: 'Vehicle Year', admin: { width: '25%' } },
+        { name: 'vehicleYear', type: 'text', admin: { width: '25%' } },
         { name: 'vehicleMake', type: 'text', label: 'Make/Model', admin: { width: '25%' } },
       ],
     },
-    {
-      name: 'message',
-      type: 'textarea',
-      label: 'Message / Notes',
-    },
+    { name: 'message', type: 'textarea', label: 'Message / Notes' },
     {
       name: 'fleetSize',
       type: 'number',
@@ -127,33 +180,45 @@ export const Leads: CollectionConfig = {
       ],
     },
     {
-      name: 'internalNotes',
-      type: 'textarea',
-      label: 'Internal Notes (not visible to customer)',
-      admin: { description: 'Staff only — add follow-up notes, quotes given, appointment details' },
-    },
-    {
       name: 'assignedTo',
-      type: 'text',
+      type: 'relationship',
+      relationTo: 'users',
       label: 'Assigned To',
     },
     {
       name: 'followUpDate',
       type: 'date',
       label: 'Follow-Up Date',
-      admin: {
-        date: { pickerAppearance: 'dayOnly' },
-      },
+      admin: { date: { pickerAppearance: 'dayOnly' } },
+    },
+    {
+      name: 'notes',
+      type: 'array',
+      label: 'Internal Notes',
+      admin: { description: 'Staff-only timeline of follow-ups.' },
+      fields: [
+        { name: 'note', type: 'textarea', required: true },
+        {
+          name: 'author',
+          type: 'relationship',
+          relationTo: 'users',
+        },
+        {
+          name: 'createdAt',
+          type: 'date',
+          defaultValue: () => new Date().toISOString(),
+        },
+      ],
     },
     {
       name: 'aiSummary',
       type: 'group',
       label: 'AI Enrichment',
-      admin: { description: 'Auto-populated by AI intake pipeline' },
+      admin: { description: 'Auto-populated by AI intake pipeline (future).' },
       fields: [
-        { name: 'priceEstimate', type: 'text', label: 'Price Estimate' },
-        { name: 'timelineEstimate', type: 'text', label: 'Timeline Estimate' },
-        { name: 'personalizedMessage', type: 'textarea', label: 'Personalized Message Draft' },
+        { name: 'priceEstimate', type: 'text' },
+        { name: 'timelineEstimate', type: 'text' },
+        { name: 'personalizedMessage', type: 'textarea' },
       ],
     },
   ],
