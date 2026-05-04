@@ -1,0 +1,34 @@
+/**
+ * Portal-specific styles. Loaded only inside /portal route group.
+ * Uses the same color tokens as the public Capital Upfitters site.
+ */
+
+:root {
+  --portal-bg:           #f7f8fa;
+  --portal-surface:      #ffffff;
+  --portal-border:       #e5e7eb;
+  --portal-text:         #111827;
+  --portal-text-muted:   #6b7280;
+  --portal-text-faint:   #9ca3af;
+  --portal-accent:       #203055;
+  --portal-accent-hover: #162240;
+  --portal-nav-bg:       #111827;
+  --portal-nav-text:     #f8fafc;
+  --portal-nav-text-muted: #9ca3af;
+  --portal-success:      #16a34a;
+  --portal-warning:      #eab308;
+  --portal-error:        #ef4444;
+  --portal-info:         #2563eb;
+}
+
+.portal-root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--portal-bg);
+  color: var(--portal-text);
+  min-height: 100vh;
+}
+
+.portal-display {
+  font-family: 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif;
+  letter-spacing: -0.01em;
+}

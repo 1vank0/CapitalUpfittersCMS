@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { orgRelationship, defaultOrgOnCreate, orgReadAccess, orgWriteAccess } from '../utils/orgScope'
 
 export const FAQs: CollectionConfig = {
   slug: 'faqs',
@@ -7,7 +8,17 @@ export const FAQs: CollectionConfig = {
     group: 'Content',
     defaultColumns: ['question', 'service', 'audience', 'active'],
   },
+  access: {
+    create: orgWriteAccess,
+    read: orgReadAccess,
+    update: orgWriteAccess,
+    delete: orgWriteAccess,
+  },
+  hooks: {
+    beforeChange: [defaultOrgOnCreate],
+  },
   fields: [
+    orgRelationship,
     {
       name: 'question',
       type: 'text',

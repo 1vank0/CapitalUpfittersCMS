@@ -4,6 +4,7 @@ import { buildConfig } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 
+// ─── Content collections ──────────────────────────────────
 import { Services } from './payload/collections/Services'
 import { Pages } from './payload/collections/Pages'
 import { GeoPages } from './payload/collections/GeoPages'
@@ -11,10 +12,21 @@ import { Media } from './payload/collections/Media'
 import { Testimonials } from './payload/collections/Testimonials'
 import { FAQs } from './payload/collections/FAQs'
 import { Tags } from './payload/collections/Tags'
+import { ContentBlocks } from './payload/collections/ContentBlocks'
+
+// ─── Operations collections ───────────────────────────────
 import { Leads } from './payload/collections/Leads'
 import { Quotes } from './payload/collections/Quotes'
 import { AccountRequests } from './payload/collections/AccountRequests'
+
+// ─── System collections ───────────────────────────────────
+import { Organizations } from './payload/collections/Organizations'
+import { OrgMemberships } from './payload/collections/OrgMemberships'
+import { Users } from './payload/collections/Users'
+
+// ─── Globals ──────────────────────────────────────────────
 import { Settings } from './payload/globals/Settings'
+import { AIProfile } from './payload/globals/AIProfile'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -27,10 +39,10 @@ export default buildConfig({
       autoGenerate: false,
     },
     meta: {
-      titleSuffix: '— Capital Upfitters CMS',
-      favicon: '/favicon.ico',
-      ogImage: '/og-image.jpg',
-      description: 'Operational control center for capitalupfitters.com',
+      titleSuffix: '— Upfit Portal',
+      icons: [{ rel: 'icon', url: '/favicon.ico' }],
+      openGraph: { images: [{ url: '/og-image.jpg' }] },
+      description: 'Upfit Portal — operational control center for upfitting businesses.',
     },
     user: 'users',
     autoLogin:
@@ -43,10 +55,11 @@ export default buildConfig({
   },
   collections: [
     // ─── Content ───────────────────────────────────────────
-    Services,
     Pages,
+    Services,
     GeoPages,
     Media,
+    ContentBlocks,
     Testimonials,
     FAQs,
     Tags,
@@ -55,39 +68,13 @@ export default buildConfig({
     Quotes,
     AccountRequests,
     // ─── System ────────────────────────────────────────────
-    {
-      slug: 'users',
-      auth: {
-        tokenExpiration: 7200,
-        cookies: {
-          secure: true,
-          sameSite: 'Lax',
-          domain: 'capital-upfitters-cms.vercel.app',
-        },
-      },
-      admin: {
-        useAsTitle: 'email',
-        group: 'Configuration',
-      },
-      fields: [
-        { name: 'name', type: 'text' },
-        {
-          name: 'role',
-          type: 'select',
-          options: [
-            { label: 'Admin', value: 'admin' },
-            { label: 'Editor', value: 'editor' },
-          ],
-          defaultValue: 'editor',
-        },
-      ],
-    },
+    Organizations,
+    OrgMemberships,
+    Users,
   ],
-  globals: [Settings],
+  globals: [Settings, AIProfile],
   editor: lexicalEditor(),
   db: vercelPostgresAdapter({
-    // Neon serverless — HTTP transport, no connection limits, perfect for Vercel
-    // Set POSTGRES_URL in Vercel env vars to your Neon connection string
     pool: {
       connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL,
     },
@@ -96,10 +83,10 @@ export default buildConfig({
   cors: [
     'https://capitalupfitters.com',
     'https://www.capitalupfitters.com',
+    'https://capital-upfitters-d2y6.vercel.app',
     'http://localhost:3000',
     process.env.NEXT_PUBLIC_SERVER_URL || '',
   ].filter(Boolean),
-  // csrf: [] — empty bypasses Sec-Fetch-Site check in extractJWT; SameSite=Lax cookie handles CSRF at browser level
   csrf: [],
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
