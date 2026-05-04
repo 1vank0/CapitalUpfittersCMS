@@ -31,3 +31,6 @@ npm-debug.log*
 # Generated Payload types (can regenerate with npm run generate:types)
 src/payload-types.ts
 src/generated-schema.graphql
+
+# Local bot runtime data
+.bot-data/

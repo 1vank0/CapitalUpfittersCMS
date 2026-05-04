@@ -1,0 +1,42 @@
+name: Marketplace Daily Runner
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 11 * * *' # 11:15 UTC daily
+
+jobs:
+  run-daily:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Prepare bot state
+        run: |
+          mkdir -p .bot-data
+          node scripts/fb-marketplace-bot.mjs init
+
+      - name: Restore Facebook session state
+        if: ${{ secrets.FB_STORAGE_STATE_B64 != '' }}
+        run: echo "${{ secrets.FB_STORAGE_STATE_B64 }}" | base64 -d > .bot-data/facebook-storage-state.json
+
+      - name: Enable automation
+        run: node scripts/fb-marketplace-bot.mjs enable-daily
+
+      - name: Run daily automation
+        env:
+          CI: true
+        run: node scripts/fb-marketplace-bot.mjs run-daily
