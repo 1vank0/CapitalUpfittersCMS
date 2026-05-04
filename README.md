@@ -168,3 +168,40 @@ Desktop UI features:
 - Add listing from URL scrape
 - Trigger post/renew/mark sold/delete actions by listing ID
 - View command output directly in the app
+
+## GitHub Actions: Scheduled Marketplace + Vercel Deploy
+
+Two ready-to-use workflows are included:
+
+1. **`.github/workflows/marketplace-daily.yml`**
+   - Runs daily (`run-daily`) and can also be launched manually.
+   - Installs Playwright Chromium and runs the Marketplace bot.
+
+2. **`.github/workflows/vercel-deploy.yml`**
+   - Deploys to Vercel on `main` pushes and manual dispatch.
+
+### Required GitHub Secrets
+
+For Marketplace daily automation:
+- `FB_STORAGE_STATE_B64`: base64-encoded Playwright storage state JSON for your logged-in Facebook session.
+
+For Vercel deployment:
+- `VERCEL_TOKEN`
+
+### Optional Vercel Project/Org Configuration
+
+If your Vercel account does not auto-detect the project, add:
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Then update the workflow commands to include these environment variables.
+
+### Generate `FB_STORAGE_STATE_B64`
+
+From your local machine (after successfully logging into Facebook with Playwright and saving `.bot-data/facebook-storage-state.json`):
+
+```bash
+base64 -w 0 .bot-data/facebook-storage-state.json
+```
+
+Copy the output into the `FB_STORAGE_STATE_B64` GitHub secret.
