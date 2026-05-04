@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Marketplace Bot Desktop</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; max-width: 900px; }
+    .row { display: flex; gap: 10px; margin-bottom: 10px; }
+    input, textarea { width: 100%; padding: 8px; }
+    button { padding: 8px 12px; }
+    pre { background: #111; color: #0f0; padding: 12px; min-height: 180px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Facebook Marketplace Bot (Local Desktop UI)</h2>
+  <div class="row"><button id="initBtn">Initialize</button><button id="listBtn">Show Listings</button></div>
+
+  <h3>Add Listing</h3>
+  <div class="row"><input id="title" placeholder="Title" /></div>
+  <div class="row"><input id="price" placeholder="Price" /></div>
+  <div class="row"><input id="location" placeholder="Location" value="Gaithersburg, MD" /></div>
+  <div class="row"><textarea id="description" placeholder="Description"></textarea></div>
+  <div class="row"><button id="addBtn">Add Listing</button></div>
+
+  <h3>Add From URL (scrape)</h3>
+  <div class="row"><input id="url" placeholder="https://example.com/product" /></div>
+  <div class="row"><button id="addFromUrlBtn">Add From URL</button></div>
+
+  <h3>Listing Action</h3>
+  <div class="row"><input id="listingId" placeholder="Listing ID" /></div>
+  <div class="row">
+    <button data-action="post">Post</button>
+    <button data-action="renew">Renew</button>
+    <button data-action="mark-sold">Mark Sold</button>
+    <button data-action="delete">Delete</button>
+  </div>
+
+  <h3>Output</h3>
+  <pre id="output"></pre>
+  <script src="renderer.js"></script>
+</body>
+</html>
