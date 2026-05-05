@@ -217,11 +217,19 @@ export async function GET(request: Request) {
     )`)
     await run('services_slug_idx', `CREATE UNIQUE INDEX IF NOT EXISTS "services_slug_idx" ON "services" ("slug")`)
 
-    // SERVICES_AUDIENCE — uses "parent_id", "order" (not _parent_id, _order)
+    // SERVICES_AUDIENCE — hasMany select; Payload expects id serial (auto-increment).
+    // Previously created with id varchar which caused INSERTs to fail with `default` keyword.
+    // Drop+recreate is safe because INSERTs failed (table is empty).
+    // Conditional drop: only if id column is varchar (the bad schema). Safe re-run.
+    await run('drop_services_audience_bad', `DO $$ BEGIN
+      IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='services_audience' AND column_name='id' AND data_type='character varying')
+      THEN DROP TABLE "services_audience" CASCADE;
+      END IF;
+    END $$`)
     await run('services_audience', `CREATE TABLE IF NOT EXISTS "services_audience" (
+      "id" serial PRIMARY KEY,
       "order" integer NOT NULL,
       "parent_id" integer NOT NULL REFERENCES "services"("id") ON DELETE CASCADE,
-      "id" varchar PRIMARY KEY,
       "value" varchar
     )`)
 
@@ -356,11 +364,16 @@ export async function GET(request: Request) {
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     )`)
 
-    // FAQS_AUDIENCE — uses "parent_id", "order" (not _parent_id, _order)
+    // FAQS_AUDIENCE — hasMany select; same fix as services_audience.
+    await run('drop_faqs_audience_bad', `DO $$ BEGIN
+      IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='faqs_audience' AND column_name='id' AND data_type='character varying')
+      THEN DROP TABLE "faqs_audience" CASCADE;
+      END IF;
+    END $$`)
     await run('faqs_audience', `CREATE TABLE IF NOT EXISTS "faqs_audience" (
+      "id" serial PRIMARY KEY,
       "order" integer NOT NULL,
       "parent_id" integer NOT NULL REFERENCES "faqs"("id") ON DELETE CASCADE,
-      "id" varchar PRIMARY KEY,
       "value" varchar
     )`)
 
@@ -616,11 +629,16 @@ export async function GET(request: Request) {
       "created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
     )`)
 
-    // ai_profile_tone — hasMany select stored as child table ("_rels" pattern variant)
+    // ai_profile_tone — hasMany select; same fix as services_audience.
+    await run('drop_ai_profile_tone_bad', `DO $$ BEGIN
+      IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='ai_profile_tone' AND column_name='id' AND data_type='character varying')
+      THEN DROP TABLE "ai_profile_tone" CASCADE;
+      END IF;
+    END $$`)
     await run('ai_profile_tone', `CREATE TABLE IF NOT EXISTS "ai_profile_tone" (
+      "id" serial PRIMARY KEY,
       "order" integer NOT NULL,
       "parent_id" integer NOT NULL REFERENCES "ai_profile"("id") ON DELETE CASCADE,
-      "id" varchar PRIMARY KEY,
       "value" varchar
     )`)
 
