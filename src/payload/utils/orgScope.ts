@@ -61,12 +61,17 @@ export const orgReadAccess: Access = ({ req }) => {
   if (!req.user) return false
   if (req.user.role === 'super-admin') return true
 
-  const defaultOrg = (req.user as { defaultOrganization?: string | number })
-    .defaultOrganization
-  if (!defaultOrg) return true // Fallback — show all if not yet scoped
+  // defaultOrganization may be a populated object { id, ... } or a scalar id
+  const raw = (req.user as { defaultOrganization?: unknown }).defaultOrganization
+  const defaultOrgId =
+    raw && typeof raw === 'object' && 'id' in (raw as Record<string, unknown>)
+      ? (raw as { id: string | number }).id
+      : (raw as string | number | undefined)
+
+  if (!defaultOrgId) return true // Fallback — show all if not yet scoped
 
   return {
-    organization: { equals: defaultOrg },
+    organization: { equals: defaultOrgId },
   }
 }
 
