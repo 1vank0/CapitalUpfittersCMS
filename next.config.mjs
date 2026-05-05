@@ -18,8 +18,13 @@ const nextConfig = {
       },
     ],
   },
-  // Required for Payload CMS Postgres in serverless
-  serverExternalPackages: ['pg', 'pg-native'],
+  // Required for Payload CMS Postgres in serverless.
+  // drizzle-kit is required at runtime by /api/schema-push (Payload's
+  // pushDevSchema lazily imports `drizzle-kit/api`).
+  serverExternalPackages: ['pg', 'pg-native', 'drizzle-kit', '@payloadcms/drizzle'],
+  outputFileTracingIncludes: {
+    '/api/schema-push': ['./node_modules/drizzle-kit/**/*'],
+  },
 }
 
 export default withPayload(nextConfig)
