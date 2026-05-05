@@ -689,6 +689,8 @@ export async function GET(request: Request) {
     await run('pages_add_organization_id', `ALTER TABLE "pages" ADD COLUMN IF NOT EXISTS "organization_id" integer REFERENCES "organizations"("id") ON DELETE SET NULL`)
     await run('pages_add_page_type', `ALTER TABLE "pages" ADD COLUMN IF NOT EXISTS "page_type" varchar DEFAULT 'standard'`)
     await run('pages_add_status', `ALTER TABLE "pages" ADD COLUMN IF NOT EXISTS "status" varchar DEFAULT 'draft'`)
+    // Payload versioning + drafts also tracks publish state via the underscore-prefixed _status column
+    await run('pages_add__status', `ALTER TABLE "pages" ADD COLUMN IF NOT EXISTS "_status" varchar DEFAULT 'draft'`)
     await run('pages_org_idx', `CREATE INDEX IF NOT EXISTS "pages_org_idx" ON "pages" ("organization_id")`)
 
     // pages: extended hero fields (heroImage_id already handled via pages_rels; add new group cols)
